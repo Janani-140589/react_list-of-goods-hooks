@@ -15,16 +15,20 @@ export const goodsFromServer = [
   'Garlic',
 ];
 
+export enum SortType {
+  alphabet = 'alphabet',
+  length = 'length',
+  default = '',
+}
+
 export const GoodsList: React.FC<{ goods: string[] }> = ({ goods }) => {
   return (
     <ul>
-      <ul>
-        {goods.map(good => (
-          <li data-cy="Good" key={good}>
-            {good}
-          </li>
-        ))}
-      </ul>
+      {goods.map(good => (
+        <li data-cy="Good" key={good}>
+          {good}
+        </li>
+      ))}
     </ul>
   );
 };
@@ -36,13 +40,13 @@ export const App: React.FC = () => {
   let showReset = false;
 
   const goods = [...goodsFromServer].sort((good1, good2) => {
-    if (sortBy === 'alphabet') {
+    if (sortBy === SortType.alphabet) {
       return good1.localeCompare(good2);
-    } else if (sortBy === 'length') {
+    } else if (sortBy === SortType.length) {
       return good1.length - good2.length;
-    } else {
-      return 0;
     }
+
+    return 0;
   });
 
   if (reverse) {
@@ -66,7 +70,7 @@ export const App: React.FC = () => {
           className={
             sortBy === 'alphabet' ? 'button is-info' : 'button is-info is-light'
           }
-          onClick={() => setSortBy('alphabet')}
+          onClick={() => setSortBy(SortType.alphabet)}
         >
           Sort alphabetically
         </button>
@@ -78,7 +82,7 @@ export const App: React.FC = () => {
               ? 'button is-success'
               : 'button is-success is-light'
           }
-          onClick={() => setSortBy('length')}
+          onClick={() => setSortBy(SortType.length)}
         >
           Sort by length
         </button>
@@ -97,7 +101,7 @@ export const App: React.FC = () => {
             type="button"
             className="button is-danger is-light"
             onClick={() => {
-              setSortBy('');
+              setSortBy(SortType.default);
               setReverse(false);
             }}
           >
